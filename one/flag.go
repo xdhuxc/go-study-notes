@@ -2,7 +2,8 @@ package main
 
 import (
 	"flag"
-	log "github.com/sirupsen/logrus"
+	"fmt"
+	"os"
 )
 
 var password string
@@ -12,13 +13,13 @@ func init() {
 }
 
 func main() {
+	fmt.Printf("the args is %s\n", os.Args)
 
 	flag.Parse()
 
-	log.Println(password)
+	fmt.Printf("the password is %s\n", password)
 
-	if password == "qZ2Xis#dsdg#Gi#LSf0b$HBL#LDLUG5uUGr8v0" {
-		log.Println(true)
+	if password == "qZ2XisdsdgGiLSf0b$HBL#LDLUG5uUGr8v0" {
+		fmt.Println(true)
 	}
-
 }

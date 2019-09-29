@@ -7,13 +7,24 @@ import (
 
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
-
-	"github.com/xdhuxc/chitchat/src/models"
 )
 
+type Configuration struct {
+	Server Server `yaml:"Server"`
+}
+
+type Server struct {
+	Address      string `yaml:"Address"`
+	ReadTimeout  int64  `yaml:"ReadTimeout"`
+	WriteTimeout int64  `yaml:"WriteTimeout"`
+	Static       string `yaml:"Static"`
+	Password     string `yaml:"Password"`
+}
+
 func main() {
-	var conf models.Configuration
-	path := "conf.test.yml"
+	var conf Configuration
+	path := "/Users/wanghuan/GolandProjects/GoPath/src/github.com/xdhuxc/go-study-notes/tools/yaml/conf.test.yml"
+
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		logrus.Fatalln("the configuration file does not exists", err)
 
@@ -26,6 +37,6 @@ func main() {
 	if err != nil {
 		logrus.Fatalln("Unmarshal yaml file error", err)
 	}
-	fmt.Println(conf.Server)
 
+	fmt.Println(conf.Server)
 }
