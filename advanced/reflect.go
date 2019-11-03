@@ -50,8 +50,50 @@ var (
 	String = reflect.TypeOf("")
 )
 
-func main() {
+type data3 struct {
+}
 
+func (*data3) String() string {
+	return ""
+}
+
+type data4 struct {
+	b byte
+	x int32
+}
+
+func main() {
+	// 某些时候，获取对齐信息对于内存自动分析是很有用的
+	var d data4
+
+	t := reflect.TypeOf(d)
+	fmt.Println(t.Size(), t.Align()) // sizeof，以及最宽字段的对其模数
+
+	f, _ := t.FieldByName("b")
+	fmt.Println(f.Type.FieldAlign()) // 字段对其
+
+}
+
+func reflect8() {
+	/**
+	方法 Implements 判断是否实现了某个具体接口，AssignableTo，ConvertibleTo 用于赋值和转换判断
+	*/
+
+	var d *data3
+	t := reflect.TypeOf(d)
+
+	/**
+	无法直接获取接口类型，但接口本身是个 struct，创建一个空指针对象，这样传递给 TypeOf 转换成 interface{} 时就有类型信息了
+	*/
+	it := reflect.TypeOf((*fmt.Stringer)(nil)).Elem()
+
+	fmt.Println(t.Implements(it))
+}
+
+func reflect7() {
+	// 可以使用方法 Elem 返回复合类型的基类型
+	t := reflect.TypeOf(make(chan int)).Elem()
+	fmt.Println(t)
 }
 
 func reflect6() {
