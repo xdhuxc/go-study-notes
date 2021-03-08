@@ -17,10 +17,53 @@ func main() {
 		return
 	}
 
+	channel := "alert_rules"
+	go CommonSubscribe(client, channel)
+	/*
+		subscriber := client.Subscribe(channel)
+		for m := range subscriber.Channel() {
+			fmt.Println("the channel is ", m.Channel)
+			fmt.Println("the payload is ", m.Payload)
+		}
+	*/
+	select {}
+
 	values, err := GetByKeyName(client, "rule")
 	for _, value := range values {
 		fmt.Println(value)
 	}
+}
+
+func CommonSubscribe(client *redis.Client, channel string) {
+	subscribe := client.Subscribe(channel)
+	result, err := subscribe.Receive()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	switch result.(type) {
+	case *redis.Subscription:
+		// 订阅成功
+		log.Println("subscribing successfully")
+	case *redis.Message:
+		// 处理收到的消息
+		m := result.(redis.Message)
+		fmt.Println(m)
+	case *redis.Pong:
+		log.Println("receiving Pong")
+	default:
+		err = result.(error)
+		log.Println(err)
+	}
+
+	/*
+		ch := subscribe.Channel()
+		for message := range ch {
+			fmt.Println("the pattern is ", message.Pattern)
+			fmt.Println("the data is ", message.String())
+		}
+	*/
 }
 
 // 创建 redis 客户端

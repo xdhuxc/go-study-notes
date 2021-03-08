@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "github.com/xdhuxc/go-study-notes/rpc/hello/proto";
+
+service Greeter {
+    rpc SayHello (GreetRequest) returns (GreetResponse) {}
+    rpc SayHelloAgain (GreetRequest) returns (GreetResponse) {}
+}
+
+message GreetRequest {
+    string name = 1;
+}
+
+message GreetResponse {
+    string message = 1;
+}

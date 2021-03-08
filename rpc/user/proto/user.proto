@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "github.com/xdhuxc/go-study-notes/rpc/user/proto";
+
+service UserService {
+    rpc GetUser(UserRequest) returns (User) {}
+    rpc ListUsers(UserRequest) returns (stream User) {}
+}
+
+message UserRequest {
+    int32 id = 1;
+    repeated int32 ids = 2 [packed=true];
+}
+
+message User {
+    int32 id = 1;
+    string name = 2;
+    string email = 3;
+}

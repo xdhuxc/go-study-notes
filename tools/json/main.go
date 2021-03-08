@@ -17,6 +17,13 @@ type Person struct {
 	Email    string `json:"email"`
 }
 
+type User struct {
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Address  string `json:"address"`
+	Password string `json:"name"`
+}
+
 func (person Person) String() string {
 	return fmt.Sprintf("{UserId: %d, UserName: %s, Password: %s, Email: %s}", person.UserId, person.UserName, person.Password, person.Email)
 }
@@ -38,8 +45,16 @@ func main() {
 
 	personStr := `{"user_id":12,"user_name":"xdhuxc","password":"xdhuxc234","email":"xdhuxc@163.com"}`
 	var xperson Person
-	json.Unmarshal([]byte(personStr), &xperson)
+	_ = json.Unmarshal([]byte(personStr), &xperson)
 
 	fmt.Println(xperson)
 
+	user := User{
+		ID:       "abc",
+		Name:     "xdhuxc",
+		Address:  "s",
+		Password: "073#asd",
+	}
+	dataInBytes, _ := json.Marshal(&user)
+	fmt.Println(string(dataInBytes))
 }

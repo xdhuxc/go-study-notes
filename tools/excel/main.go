@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/360EntSecGroup-Skylar/excelize"
 	log "github.com/sirupsen/logrus"
@@ -14,7 +15,84 @@ type User struct {
 	Address string `json:"address"`
 }
 
+// 银行卡账目明细表
+type BankTransactionDetails struct {
+	ID                    int64     `json:"id" gorm:"id"`
+	Date                  time.Time `json:"date" gorm:"date"`
+	Type                  string    `json:"type" gorm:"type"`
+	BankCard              string    `json:"bankCard" gorm:"bank_card"`
+	Income                float64   `json:"income" gorm:"income"`
+	Expenditure           float64   `json:"expenditure" gorm:"expenditure"`
+	Balance               float64   `json:"balance" gorm:"balance"`
+	Remark                string    `json:"remark" gorm:"remark"`
+	AdditionalDescription string    `json:"additionalDescription" gorm:"additional_description"`
+	CreateTime            time.Time `json:"createTime" gorm:"create_time"`
+	UpdateTime            time.Time `json:"updateTime" gorm:"update_time"`
+}
+
+func (btd *BankTransactionDetails) TableName() string {
+	return "ams-bank_transaction_details"
+}
+
+func (btd *BankTransactionDetails) String() string {
+	if dataInBytes, err := json.Marshal(&btd); err == nil {
+		return string(dataInBytes)
+	}
+
+	return ""
+}
+
 func main() {
+	fileFullPath := "/Users/wanghuan/Library/Mobile Documents/com~apple~Numbers/Documents/个人文件/2019年银行卡账目明细.xlsx"
+	f, err := excelize.OpenFile(fileFullPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for sheetIndex, sheetName := range f.GetSheetMap() {
+		fmt.Println(sheetIndex, "--->", sheetName)
+		rows, err := f.Rows(sheetName)
+		if err != nil {
+			log.Errorln(err)
+			continue
+		}
+
+		for rows.Next() {
+			// 获取一行
+			var btd BankTransactionDetails
+
+			/*
+				if sheetName == "中国银行卡" {
+					btd.BankCard = "BOC"
+				} else if sheetName == "" {
+					btd.BankCard = ""
+				} else if sheetName == "" {
+					btd.BankCard = ""
+				} else if sheetName == "" {
+					btd.BankCard = ""
+				} else if sheetName == "" {
+					btd.BankCard = ""
+				} else if sheetName == "" {
+					btd.BankCard = ""
+				}
+			*/
+			btd.BankCard = sheetName
+			cols, err := rows.Columns()
+			if err != nil {
+				log.Errorln(err)
+				continue
+			}
+			// 获取行数组中的值
+			if len(cols) > 7 {
+				fmt.Println(cols)
+			}
+		}
+
+	}
+
+}
+
+func main1() {
 	users := []User{
 		{
 			ID:      1,
