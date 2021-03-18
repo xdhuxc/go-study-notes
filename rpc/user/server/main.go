@@ -34,6 +34,10 @@ type userServer struct {
 	*pb.UnimplementedU
 }
 
+func (us *userServer) GetUser() {
+
+}
+
 func main() {
 
 	// 开启trace
